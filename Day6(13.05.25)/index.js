@@ -159,6 +159,7 @@ app.post("/employee",EmployeeRoute,(req,res,next)=>{
 })
 app.get("/a",(req,res)=>{
     console.log("hello")
+    res.send("Hello ")
 })
 app.listen(8080 , ()=>{
     console.log("Server started")

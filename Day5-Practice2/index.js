@@ -1,5 +1,8 @@
 "use strict";
-let x = 1;
-let y = 'Rohit Singh';
-x = "rohit";
-console.log(x);
+// let x: number | string = 1; 
+// let y: string = 'Rohit Singh'
+// x = "rohit"
+// console.log(x)
+let x;
+x = "Rohit";
+console.log("hello" + { x });
