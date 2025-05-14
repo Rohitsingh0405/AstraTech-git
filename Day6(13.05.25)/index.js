@@ -1,4 +1,4 @@
-const e = require('express')
+// const e = require('express')
 const express = require('express')
 const app = express()
 app.use(express.json())
@@ -46,3 +46,91 @@ app.use(express.text())
 // })
 
 // LEVEL 0 BEGINS
+
+const user = {
+    id1:{
+        username:"Rohit",
+        password:"Rohit",
+        role:"User"
+    },
+    
+    id2:{
+        username:"Amit",
+        password:"Amit",
+        role:"Employee"
+    },
+    id3:{  
+        username:"Aniket",
+        password:"Aniket",
+        role:"Admin"
+    }
+}
+const {id1,id2,id3} = user
+
+
+// const authRoute =(req,res,next)=>{
+//     if(req.body.user.id.username === user.id.username && req.body.user.id.username === user.id.password){
+//         res.send("yes")
+//         next()
+//     }
+//     else{
+//         res.send("Username or password does not match")
+//     }
+// }
+const userRoute = (req,res,next)=>{
+    if(req.body.id1.username == id1.username && req.body.id1.password == id1.password){
+        res.send("User and password or correct");
+        if(req.body.id1.role === id1.role){
+            res.send("Role is correct")
+            next()
+        }
+        else{
+            res.send("does not match")
+        }
+    }
+    else{
+        res.send("User does not found")
+    }
+
+}
+const adminRoute = (req,res,next)=>{
+    if(req.body.id3.role == id3.role){
+        res.send("yes")
+        next()
+    }
+    else{
+        res.send("does not match")
+    }
+
+}
+
+const EmployeeRoute = (req,res,next)=>{
+    if(req.user.id2.role === id2.role){
+        res.send("yes")
+        next()
+    }
+    else{
+        res.send("does not match")
+    }
+
+}
+app.post("/user",userRoute,(req,res)=>{
+    // userRoute()
+    res.send("user route")
+    
+
+})
+app.post("/admin",adminRoute,(req,res)=>{
+    res.send("Admin Route")
+    // adminRoute()
+})
+app.post("/employee",EmployeeRoute,(req,res)=>{
+    // EmployeeRoute()
+    res.send("Employee Route")
+})
+app.get("/a",(req,res)=>{
+    console.log("hello")
+})
+app.listen(8080 , ()=>{
+    console.log("Server started")
+})
