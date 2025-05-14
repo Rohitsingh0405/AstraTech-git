@@ -65,7 +65,7 @@ const user = {
         role:"Admin"
     }
 }
-const {idd1,idd2,idd3} = user
+const {id1,id2,id3} = user
 
 // const authRoute =(req,res,next)=>{
 //     if(req.body.user.id.username === user.id.username && req.body.user.id.username === user.id.password){
@@ -78,15 +78,15 @@ const {idd1,idd2,idd3} = user
 // }
 
 const userRoute = (req,res,next)=>{
-    const {id1} = req.body;
+    // const {id1} = req.body;
     // res.send("Entered userroute")
-    
+    // res.send(req.body.id1.username)
     // res.send(id1.username)
     // res.send(password)
     // res.send(role)
-    if(id1.username === idd1.username && req.body.id1.password === idd1.password){
+    if(req.body.id1.username === id1.username && req.body.id1.password === id1.password){
         // res.send("User and password or correct");
-        if(id1.role === idd1.role){
+        if(req.body.id1.role === id1.role){
             // res.send("Role is correct")
             
             next()
@@ -101,10 +101,10 @@ const userRoute = (req,res,next)=>{
 
 }
 const adminRoute = (req,res,next)=>{
-    const {id3} = req.body;
-     if(id3.username === idd3.username && req.body.id3.password === idd3.password){
+    // const {id3} = req.body;
+     if(req.body.id3.username === id3.username && req.body.id3.password === id3.password){
    
-        if(idd3.role == idd3.role){
+        if(req.body.id3.role == id3.role){
 
         // res.send("yes")
         next()
@@ -122,10 +122,10 @@ const adminRoute = (req,res,next)=>{
 }
 
 const EmployeeRoute = (req,res,next)=>{
-    const {id2} = req.body;
-     if(id2.username === idd2.username && req.body.id2.password === idd2.password){
+    // const {id2} = req.body;
+     if(req.body.id2.username === id2.username && req.body.id2.password === id2.password){
    
-    if(idd2.role === idd2.role){
+    if(req.body.id2.role === id2.role){
         // res.send("yes")
         next()
         
