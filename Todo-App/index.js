@@ -19,15 +19,11 @@ const tokenVerify = (req,res,next)=>{
 
     const token1 = req.headers.authorization
     const token11 = token1.split(" ")
-    console.log(token11)
-    
-
-   
-   
+    // console.log(token11)
     const verified = jwt.verify(token11[1],process.env.JWT_SECRET)
     console.log(req.userData)
+    next;
     return verified
-    next();
     
 } 
 
