@@ -94,6 +94,15 @@ app.get("/seeTodo",(req,res)=>{
     res.status(200).json({Your_todos:data})
    })
 })
+app.post("/deleteTodo",(req,res)=>{
+    const usr =  tokenVerify()
+   if(!usr){
+    res.status(404).json({Message:"You are not sending the token"})
+    return
+   }
+    
+
+})
 
 app.listen(8080,()=>{
     if(!fs.existsSync("dataBase.json")){
