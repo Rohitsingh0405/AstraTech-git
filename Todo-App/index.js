@@ -29,7 +29,8 @@ const tokenVerify = (req,res,next)=>{
     return verified
     next();
     
-}
+} 
+uij
 
 
 app.post("/Signup",async(req,res)=>{
