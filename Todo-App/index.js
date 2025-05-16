@@ -30,7 +30,7 @@ const tokenVerify = (req,res,next)=>{
     next();
     
 } 
-uij
+
 
 
 app.post("/Signup",async(req,res)=>{
