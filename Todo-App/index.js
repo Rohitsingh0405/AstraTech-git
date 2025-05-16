@@ -12,7 +12,9 @@ const user = [];
 const createDatabase = ()=>{
     fs.writeFileSync("dataBase.json",JSON.stringify(user))
 }
-
+const createUserDatabase = (usr)=>{
+    fs.writeFileSync(`${usr}.txt`)
+}
 const tokenVerify = (req,res,next)=>{
 
     const token1 = req.headers.authorization
@@ -24,6 +26,7 @@ const tokenVerify = (req,res,next)=>{
    
     const verified = jwt.verify(token11[1],process.env.JWT_SECRET)
     console.log(req.userData)
+    return verified
     next();
     
 }
@@ -68,6 +71,26 @@ app.post("/Login",async(req,res)=>{
 })
 app.get("/Access",(req,res)=>{
 res.json("hi")
+})
+app.post("/addTodo",(req,res)=>{
+   const usr =  tokenVerify()
+   if(!usr){
+    res.status(404).json({Message:"You are not sending the token"})
+    return
+   }
+   if(!fs.existsSync(`${usr}.txt`)){
+    createUserDatabase(usr)
+   }
+ const {data} = req.body
+ fs.writeFile(`${usr}.txt`,data,'utf-8')
+})
+app.get("/seeTodo",(req,res)=>{
+    const usr = tokenVerify()
+     if(!usr){
+    res.status(404).json({Message:"You are not sending the token"})
+    return
+   }
+   
 })
 
 app.listen(8080,()=>{
