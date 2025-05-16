@@ -1,31 +1,28 @@
 const express = require('express')
 const fs = require('fs')
 const bcrypt = require('bcrypt')
-const jwt = require("jsonwebtoken")
+const jwt = require('jsonwebtoken')
 const { json } = require('stream/consumers');
 const app = express();
 app.use(express.json())
 
-require('dotenv').config
+require('dotenv').config()
 const user = [];
 
 const createDatabase = ()=>{
     fs.writeFileSync("dataBase.json",JSON.stringify(user))
 }
-const createUserDatabase = (usr)=>{
-    fs.writeFileSync(`${usr}.txt`)
+const createUserDatabase = (usr,data)=>{
+    console.log({user:usr})
+    console.log({datas:data})
+    fs.writeFileSync(`${usr}.txt`,data)
 }
-const tokenVerify = (req,res,next)=>{
+// const tokenVerify = (req,res)=>{
 
-    const token1 = req.headers.authorization
-    const token11 = token1.split(" ")
-    console.log(token11)
-    const verified = jwt.verify(token11[1],process.env.JWT_SECRET)
-    console.log(req.userData)
-    next;
-    return verified
+//     return verified
+
     
-} 
+// } 
 
 
 
@@ -53,16 +50,28 @@ res.json("You are now Signed Up")
 
 })
 app.post("/Login",async(req,res)=>{
-    const{username,password} = req.body;
-     readDataFunction()
+    const {username,password} = req.body;
+    
+    //  readDataFunction()
+    const readData = fs.readFileSync("database.json",'utf-8')
+const readDataParse = JSON.parse(readData)
+const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
+console.log(readDataParse)
+
+ if(findUser){
+    // res.status(200).json({Message:"User already exits"})
+    
     const hash1 = await bcrypt.compare(password,findUser.password)
     if(hash1){
-
+        console.log("Hash matched")
         const token = jwt.sign({username},process.env.JWT_SECRET,{expiresIn:'12h'})
-        res.status(200).json({Message:"You are now logged in"})
-
+        console.log(token)
+        res.status(200).json({token,success:hash1})
+        
         return
     }
+}
+
     
     res.status(404).json({Message:"You password is incorrect "})
 })
@@ -70,16 +79,28 @@ app.get("/Access",(req,res)=>{
 res.json("hi")
 })
 app.post("/addTodo",(req,res)=>{
-   const usr =  tokenVerify()
+
+    const token1 = req.headers.authorization
+    console.log(token1)
+    const token11 = token1.split(" ")
+    console.log(token11)
+    const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
+    console.log(req.userData)
    if(!usr){
+    console.log("You are not sending token")
     res.status(404).json({Message:"You are not sending the token"})
     return
    }
    if(!fs.existsSync(`${usr}.txt`)){
-    createUserDatabase(usr)
-   }
- const {data} = req.body
- fs.writeFile(`${usr}.txt`,data,'utf-8')
+    console.log("user does not exists")
+    const {data} = req.body
+    createUserDatabase(usr,data)
+    // fs.writeFileSync(`${usr}.txt`,data)
+}
+if(fs.existsSync(`${usr}.txt`)){
+    const {data} = req.body
+    fs.appendFileSync(`${usr}.txt`,JSON.stringify(data,null,2))
+}
 })
 app.get("/seeTodo",(req,res)=>{
     const usr = tokenVerify()
@@ -101,7 +122,7 @@ app.post("/deleteTodo",(req,res)=>{
   const {del} = req.body;
   const readData = fs.readFileSync("database.json",'utf-8')
   const newData = readData.replace(del,'') 
-  fs.writeFileSync(`${usr}.txt`,newData,'utf-8');
+  fs.writeFileSync(`${usr}.txt`,newData);
 
 
 })
