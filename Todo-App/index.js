@@ -113,12 +113,16 @@ app.post("/admin",(req,res)=>{
     const{username,password} = req.body
     const a = fs.readFileSync("admin.json",'utf-8')
     const ues =  a.find((usr)=>usr.username == username && usr.password == password)
-    if(ues){
-        const rd = fs.readFileSync("database.json",'utf-8')
-        res.status(200).json({Message:rd})
-        return 
+    // return 
+    if(!ues){
+        res.json({Message:"You id password for admin does not match "})
     }
-    res.json({Message:"You id password for admin does not match "})
+    const rd = fs.readFileSync("database.json",'utf-8')
+
+    res.status(200).json({Message:rd})
+    const {del} = req.body;
+    fs.unlinkSync(`${del}.txt`)
+    console.log("Now todo is deleted")
 })
 
 app.listen(8080,()=>{
