@@ -116,6 +116,7 @@ app.post("/admin",(req,res)=>{
     const rd = fs.readFileSync("database.json",'utf-8')
 
     res.status(200).json({Message:rd})
+    res.status(200).json("Enter the name of the user to remove it ")
     const {del} = req.body;
     fs.unlinkSync(`${del}.txt`)
     console.log("Now todo is deleted")
