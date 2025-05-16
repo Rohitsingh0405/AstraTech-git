@@ -93,7 +93,7 @@ app.get("/seeTodo",(req,res)=>{
 })
 
 app.post("/deleteTodo",(req,res)=>{
-    const usr =  tokenVerify()
+    const usr = tokenVerify()
    if(!usr){
     res.status(404).json({Message:"You are not sending the token"})
     return
