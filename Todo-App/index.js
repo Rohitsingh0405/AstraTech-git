@@ -13,23 +13,24 @@ const createDatabase = ()=>{
     fs.writeFileSync("dataBase.json",JSON.stringify(user))
 }
 
-// const tokenVerify = (req,res,next)=>{
+const tokenVerify = (req,res,next)=>{
 
-//     const token1 = req.headers.authorization
-//     const token11 = token1.split(" ")
-//     console.log(token11)
+    const token1 = req.headers.authorization
+    const token11 = token1.split(" ")
+    console.log(token11)
     
 
    
    
-//     const verified = jwt.verify(token11[1],process.env.JWT_SECRET)
-//     console.log(req.userData)
-//     next();
+    const verified = jwt.verify(token11[1],process.env.JWT_SECRET)
+    console.log(req.userData)
+    next();
     
-// }
+}
 
 
-app.get("/Signup",async(req,res)=>{
+app.post("/Signup",async(req,res)=>{
+
 const {username,password} = req.body
 console.log("Eror kya hai")
 const hashpass =await bcrypt.hash(password,10)
@@ -51,7 +52,7 @@ fs.writeFileSync('database.json',JSON.stringify(readDataParse,null,2))
 res.json("You are now Signed Up")
 
 })
-app.get("/Login",async(req,res)=>{
+app.post("/Login",async(req,res)=>{
     const{username,password} = req.body;
      readDataFunction()
     const hash1 = await bcrypt.compare(password,findUser.password)
