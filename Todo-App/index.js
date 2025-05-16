@@ -94,14 +94,17 @@ app.get("/seeTodo",(req,res)=>{
     res.status(200).json({Your_todos:data})
    })
 })
+
 app.post("/deleteTodo",(req,res)=>{
     const usr =  tokenVerify()
    if(!usr){
     res.status(404).json({Message:"You are not sending the token"})
     return
    }
-    
-
+  const {del} = req.body;
+  const readData = fs.readFileSync("database.json",'utf-8')
+  const newData = readData.replace(del,'') 
+  fs.writeFileSync(`${usr}.txt`,newData,'utf-8');
 })
 
 app.listen(8080,()=>{
