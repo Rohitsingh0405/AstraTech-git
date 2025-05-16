@@ -115,6 +115,7 @@ app.post("/admin",(req,res)=>{
     if(ues){
         const rd = fs.readFileSync("database.json",'utf-8')
         res.status(200).json({Message:rd})
+        return 
     }
     res.json({Message:"You id password for admin does not match "})
 })
