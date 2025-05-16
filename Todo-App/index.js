@@ -105,7 +105,18 @@ app.post("/deleteTodo",(req,res)=>{
   const readData = fs.readFileSync("database.json",'utf-8')
   const newData = readData.replace(del,'') 
   fs.writeFileSync(`${usr}.txt`,newData,'utf-8');
-  
+
+
+})
+app.post("/admin",(req,res)=>{
+    const{username,password} = req.body
+    const a = fs.readFileSync("admin.json",'utf-8')
+    const ues =  a.find((usr)=>usr.username == username && usr.password == password)
+    if(ues){
+        const rd = fs.readFileSync("database.json",'utf-8')
+        res.status(200).json({Message:rd})
+    }
+    res.json({Message:"You id password for admin does not match "})
 })
 
 app.listen(8080,()=>{
@@ -113,4 +124,5 @@ app.listen(8080,()=>{
         createDatabase();
     }
     console.log("Server started")
+    console.log("When the server started .")
 })
