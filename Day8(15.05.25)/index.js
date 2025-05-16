@@ -26,7 +26,6 @@ const middle = (req,res,next)=>{
         const toke = tok.split(" ")
         // const user1 = jwt.sign(toke[1])
         const user11 = jwt.verify(toke[1],process.env.JWT_SECRET)
-        
         console.log(user11,"ouhiuiug")
         req.userData = user11;
         // console.log(toke[1])
