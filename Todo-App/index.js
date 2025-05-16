@@ -90,7 +90,9 @@ app.get("/seeTodo",(req,res)=>{
     res.status(404).json({Message:"You are not sending the token"})
     return
    }
-   
+   fs.readFile(`${usr}.txt`,'utf-8',(err,data)=>{
+    res.status(200).json({Your_todos:data})
+   })
 })
 
 app.listen(8080,()=>{
