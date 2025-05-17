@@ -33,5 +33,25 @@
   {
     "username": "Person12",
     "password": "$2b$10$2C/tfb/cms0PR3AGh5/ft.zHqS.bjP6djSZsOe8ph4iDqO/a/QvWC"
+  },
+  {
+    "username": "User 1",
+    "password": "$2b$10$pdLqc4dmywnUXMcQuL09MOc2JEcMs.HHqyynISZiYFVCwoCDcbuQC"
+  },
+  {
+    "username": "User1",
+    "password": "$2b$10$7L9GVwknaQix8ixJk78TYOvb1I9gglrod8bINOHVpbzttfP2ItFZG"
+  },
+  {
+    "username": "User_1",
+    "password": "$2b$10$u6ds4CDlyfzK1dQ4.QiPiOVlf63RWZ6V3x0j.0dMIGzByCc7f/AQG"
+  },
+  {
+    "username": "User",
+    "password": "$2b$10$gmEdR82pGgALTAlV87C44uA8ZUpBvZLQFsiTW9UiPHEGkyXTVnArq"
+  },
+  {
+    "username": "user1",
+    "password": "$2b$10$0U9iKo4wPDlzB1rqdLC4zOSo48VOMRrdPpdnip0D83HJ0lB0eCM9e"
   }
 ]

@@ -7,16 +7,30 @@ const { json } = require('stream/consumers')
 const app = express();
 app.use(express.json())
 
+
+
 require('dotenv').config()
 const user = [];
 
+
+const date = new Date()
+const hour = date.getHours()
+const min = date.getMinutes()
+
+const ti = `${hour}:${min}`
 const createDatabase = ()=>{
     fs.writeFileSync("dataBase.json",JSON.stringify(user))
 }
 const createUserDatabase = (usr,data)=>{
     console.log({user:usr})
     console.log({datas:data})
-    fs.writeFileSync(`${usr}.txt`,data)
+    const space = "\n"
+    const space1 = "\t"
+    fs.writeFileSync(`${usr}.txt`,data+space1+ti+space)
+    // fs.appendFileSync(`${usr}.txt `,space)
+    
+    // fs.appendFileSync(`${usr}.txt`,ti)
+    
 }
 // const tokenVerify = (req,res)=>{
 
@@ -99,11 +113,14 @@ app.post("/addTodo",(req,res)=>{
     const {data} = req.body
     createUserDatabase(usr.username,data)
     // fs.writeFileSync(`${usr}.txt`,data)
+    res.status(200).json({Todo:"Your Todo is Added"})
     return
 }
 if(fs.existsSync(`${usr.username}.txt`)){
     const {data} = req.body
-    fs.appendFileSync(`${usr.username}.txt`,data)
+    fs.appendFileSync(`${usr.username}.txt`,data + space + ti)
+    // fs.appendFileSync(`${usr.username}.txt`,ti)
+    res.status(200).json({Todo:"Your Todo is Added"})
     return
 }
 })
