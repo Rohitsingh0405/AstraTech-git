@@ -25,8 +25,6 @@ const createUserDatabase = (usr,data)=>{
     
 // } 
 
-
-
 app.post("/Signup",async(req,res)=>{
 
 const {username,password} = req.body
@@ -37,6 +35,7 @@ const readData = fs.readFileSync("database.json",'utf-8')
 const readDataParse = JSON.parse(readData)
 const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
 console.log(readDataParse)
+
  if(findUser){
     res.status(200).json({Message:"User already exits"})
     return
@@ -71,6 +70,7 @@ console.log(readDataParse)
         
         return
     }
+
 }
 
     
@@ -171,8 +171,7 @@ const w = d.map((num)=> num.username== username && num.password == password)
         return
     }
     // const rd = fs.readFileSync("database.json",'utf-8')
-
-    // res.status(200).json({Message:rd})
+   // res.status(200).json({Message:rd})
     // res.status(200).json("Enter the name of the user to remove it ")
     // const {del} = req.body;
     fs.unlinkSync(`${del}.txt`)
