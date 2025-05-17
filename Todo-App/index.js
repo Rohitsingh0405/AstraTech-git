@@ -159,7 +159,7 @@ app.post("/admin",(req,res)=>{
 const b  = fs.readFileSync("admin.json",'utf-8')
 const d = JSON.parse(b)
     console.log(b)
-    
+    // this will be used to maintain the json doc
 const w = d.map((num)=> num.username== username && num.password == password)
     // console.log(a.username)
     // const ues =  a.find((usr)=>usr.username == username && usr.password == password)
