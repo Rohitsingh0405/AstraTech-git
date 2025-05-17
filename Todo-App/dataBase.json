@@ -6,5 +6,16 @@
   {
     "username": "ani",
     "password": "$2b$10$Tl4A3WP3bm7YNbKKVQtCnOFWRS78dXC/OqzpAvhDOE.qoD8CvbHrG"
+  },
+  {
+    "username": "Rohit1",
+    "password": "$2b$10$NoD8Lq4ZfMArXZCMyQ0vVuXX7TSUPcpLK85utuTHswhCNTQVRj./m"
+  },
+  {
+    "password": "$2b$10$IxLaEp2M3Vo4mbcDAj8M6.mbT8qoSfTWQncoNHUNp/UjYpRQGVCA6"
+  },
+  {
+    "username": "person2",
+    "password": "$2b$10$HlKxPzEgHS6e0/3CbWjhF.nPwpvdI3VR0cMlhBFwUZDquZfDneEPq"
   }
 ]

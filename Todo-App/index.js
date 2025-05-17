@@ -79,50 +79,73 @@ app.get("/Access",(req,res)=>{
 res.json("hi")
 })
 app.post("/addTodo",(req,res)=>{
-
+    // console.log("This is the add Todo api")
     const token1 = req.headers.authorization
-    console.log(token1)
+    // console.log(token1)
     const token11 = token1.split(" ")
-    console.log(token11)
+    // console.log(token11)
     const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
-    console.log(req.userData)
-   if(!usr){
+    console.log(usr.username)
+
+    // console.log(req.userData)
+   if(!usr.username){
     console.log("You are not sending token")
     res.status(404).json({Message:"You are not sending the token"})
     return
    }
-   if(!fs.existsSync(`${usr}.txt`)){
+   if(!fs.existsSync(`${usr.username}.txt`)){
     console.log("user does not exists")
     const {data} = req.body
-    createUserDatabase(usr,data)
+    createUserDatabase(usr.username,data)
     // fs.writeFileSync(`${usr}.txt`,data)
+    return
 }
-if(fs.existsSync(`${usr}.txt`)){
+if(fs.existsSync(`${usr.username}.txt`)){
     const {data} = req.body
-    fs.appendFileSync(`${usr}.txt`,JSON.stringify(data,null,2))
+    fs.appendFileSync(`${usr.username}.txt`,data)
+    return
 }
 })
 app.get("/seeTodo",(req,res)=>{
-    const usr = tokenVerify()
-     if(!usr){
+    // const usr = tokenVerify()
+    const token1 = req.headers.authorization
+    // console.log(token1)
+    const token11 = token1.split(" ")
+    // console.log(token11)
+    const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
+    // console.log(usr.username)
+
+    // console.log(req.userData)
+   if(!usr.username){
+    console.log("You are not sending token")
     res.status(404).json({Message:"You are not sending the token"})
     return
    }
-   fs.readFile(`${usr}.txt`,'utf-8',(err,data)=>{
+    console.log(usr)
+   fs.readFile(`${usr.username}.txt`,'utf-8',(err,data)=>{
     res.status(200).json({Your_todos:data})
    })
 })
 
 app.post("/deleteTodo",(req,res)=>{
-    const usr = tokenVerify()
-   if(!usr){
+    // const usr = tokenVerify()
+    const token1 = req.headers.authorization
+    // console.log(token1)
+    const token11 = token1.split(" ")
+    // console.log(token11)
+    const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
+    // console.log(usr.username)
+
+    // console.log(req.userData)
+   if(!usr.username){
+    console.log("You are not sending token")
     res.status(404).json({Message:"You are not sending the token"})
     return
    }
   const {del} = req.body;
-  const readData = fs.readFileSync("database.json",'utf-8')
+  const readData = fs.readFileSync(`${usr.username}.txt`,'utf-8')
   const newData = readData.replace(del,'') 
-  fs.writeFileSync(`${usr}.txt`,newData);
+  fs.writeFileSync(`${usr.username}.txt`,newData);
 
 
 })
