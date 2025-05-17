@@ -2,7 +2,8 @@ const express = require('express')
 const fs = require('fs')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { json } = require('stream/consumers');
+// const { json } = require('stream/consumers');
+const { json } = require('stream/consumers')
 const app = express();
 app.use(express.json())
 
@@ -150,18 +151,30 @@ app.post("/deleteTodo",(req,res)=>{
 
 })
 app.post("/admin",(req,res)=>{
-    const{username,password} = req.body
-    const a = fs.readFileSync("admin.json",'utf-8')
-    const ues =  a.find((usr)=>usr.username == username && usr.password == password)
-    // return 
-    if(!ues){
-        res.json({Message:"You id password for admin does not match "})
-    }
-    const rd = fs.readFileSync("database.json",'utf-8')
+    const{username,password,del} = req.body
+//     const a = fs.readFileSync("admin.json",'utf-8')
+//    const b =  a.find((usr)=>usr.username == username)
 
-    res.status(200).json({Message:rd})
-    res.status(200).json("Enter the name of the user to remove it ")
-    const {del} = req.body;
+   
+const b  = fs.readFileSync("admin.json",'utf-8')
+const d = JSON.parse(b)
+    console.log(b)
+    
+const w = d.map((num)=> num.username== username && num.password == password)
+    // console.log(a.username)
+    // const ues =  a.find((usr)=>usr.username == username && usr.password == password)
+    // const ues = a.username
+    // console.log(username)
+    // console.log(ues)
+    if(!w){
+        res.status(404).json({Message:"You id password for admin does not match "})
+        return
+    }
+    // const rd = fs.readFileSync("database.json",'utf-8')
+
+    // res.status(200).json({Message:rd})
+    // res.status(200).json("Enter the name of the user to remove it ")
+    // const {del} = req.body;
     fs.unlinkSync(`${del}.txt`)
     console.log("Now todo is deleted") 
     // console.error("this is error")
