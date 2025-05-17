@@ -21,11 +21,11 @@ const ti = `${hour}:${min}`
 const createDatabase = ()=>{
     fs.writeFileSync("dataBase.json",JSON.stringify(user))
 }
+const space = "\n"
+const space1 = "\t"
 const createUserDatabase = (usr,data)=>{
     console.log({user:usr})
     console.log({datas:data})
-    const space = "\n"
-    const space1 = "\t"
     fs.writeFileSync(`${usr}.txt`,data+space1+ti+space)
     // fs.appendFileSync(`${usr}.txt `,space)
     
@@ -160,10 +160,11 @@ app.post("/deleteTodo",(req,res)=>{
     res.status(404).json({Message:"You are not sending the token"})
     return
    }
-  const {del} = req.body;
+  const {data} = req.body;
   const readData = fs.readFileSync(`${usr.username}.txt`,'utf-8')
-  const newData = readData.replace(del,'') 
+  const newData = readData.replace(data,'') 
   fs.writeFileSync(`${usr.username}.txt`,newData);
+  res.status(200).json("You Todo is deleted")
 
 
 })
