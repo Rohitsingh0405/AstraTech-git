@@ -8,10 +8,10 @@ const fs = require('fs');
 const { json } = require("stream/consumers");
 app.post("/Signup",async(req,res)=>{
 const {username,password} = req.body;
-// const hashUsername = await bcrypt.hash(username,10)
+const hashUsername = await bcrypt.hash(username,10)
 const hashPassword = await bcrypt.hash(password,10)
-user.push({Username:username , Password:hashPassword})
-fs.writeFileSync("datbase.json",user)
+user.push({Username:hashUsername , Password:hashPassword})
+fs.writeFileSync("datbase.json",JSON.stringify(user))
 })
 app.post("/Login",(req,res)=>{
     // const {username,password} = req.body;
