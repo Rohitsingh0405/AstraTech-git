@@ -8,8 +8,16 @@ const fs = require('fs');
 const { json } = require("stream/consumers");
 app.post("/Signup",async(req,res)=>{
 const {username,password} = req.body;
+const fullData = fs.readFileSync("database.json",'utf-8')
+const fullDataExist = JSON.parse(fullData)
+
+fullDataExist.find((user)=>{
+    user.username
+})
+
 const hashUsername = await bcrypt.hash(username,10)
 const hashPassword = await bcrypt.hash(password,10)
+
 user.push({Username:hashUsername , Password:hashPassword})
 fs.appendFileSync("database.json",JSON.stringify(user,null,2))
 res.status(200).json("You are Signed UP")
