@@ -11,7 +11,7 @@ const {username,password} = req.body;
 const hashUsername = await bcrypt.hash(username,10)
 const hashPassword = await bcrypt.hash(password,10)
 user.push({Username:hashUsername , Password:hashPassword})
-fs.writeFileSync("database.json",JSON.stringify(user))
+fs.appendFileSync("database.json",JSON.stringify(user,null,2))
 res.status(200).json("You are Signed UP")
 })
 app.post("/Login",(req,res)=>{
@@ -22,7 +22,7 @@ app.post("/Login",(req,res)=>{
 })
 app.post("/",(req,res)=>{
  if(!fs.existsSync("database.json")){
-    fs.writeFileSync("database.json","Database is Ready \n" )
+    fs.writeFileSync("database.json"," " )
     res.status(200).json("Database is Ready")
     return
  }
