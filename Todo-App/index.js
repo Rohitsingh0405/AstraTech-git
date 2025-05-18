@@ -13,6 +13,7 @@ require('dotenv').config()
 const user = [];
 
 
+
 const date = new Date()
 const hour = date.getHours()
 const min = date.getMinutes()
@@ -206,3 +207,4 @@ app.listen(8080,()=>{
 })
 
 // Just for the commit 
+// console.log("Error log")
