@@ -68,10 +68,16 @@ app.post("/Login",async(req,res)=>{
     const {username,password} = req.body;
     
     //  readDataFunction()
+    if(username == "Aniket" && password == "Aniket"){
+         const token = jwt.sign({username},process.env.JWT_SECRET,{expiresIn:'12h'})
+        console.log(token)
+        res.status(200).json({token})
+       
+    }
     const readData = fs.readFileSync("database.json",'utf-8')
-const readDataParse = JSON.parse(readData)
-const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
-console.log(readDataParse)
+    const readDataParse = JSON.parse(readData)
+    const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
+    console.log(readDataParse)
 
  if(findUser){
     // res.status(200).json({Message:"User already exits"})
@@ -100,7 +106,7 @@ app.post("/addTodo",(req,res)=>{
     // console.log(token1)
     const token11 = token1.split(" ")
     // console.log(token11)
-    const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
+   const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
     console.log(usr.username)
 
     // console.log(req.userData)
@@ -135,6 +141,14 @@ app.get("/seeTodo",(req,res)=>{
     // console.log(usr.username)
 
     // console.log(req.userData)
+    if(usr.username == "Aniket"){
+        const data = fs.readFileSync("database.json",'utf-8')
+        const data1 = JSON.parse(data) 
+        res.json(data1)
+
+        return
+    }
+
    if(!usr.username){
     console.log("You are not sending token")
     res.status(404).json({Message:"You are not sending the token"})
@@ -170,16 +184,23 @@ app.post("/deleteTodo",(req,res)=>{
 
 })
 app.post("/admin",(req,res)=>{
-    const{username,password,del} = req.body
+    const{del} = req.body
 //     const a = fs.readFileSync("admin.json",'utf-8')
 //    const b =  a.find((usr)=>usr.username == username)
+    const token1 = req.headers.authorization
+    // console.log(token1)
+    const token11 = token1.split(" ")
+    // console.log(token11)
+   const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
+    console.log(usr.username)
+
 
    
 const b  = fs.readFileSync("admin.json",'utf-8')
 const d = JSON.parse(b)
     console.log(b)
     // this will be used to maintain the json doc
-const w = d.map((num)=> num.username== username && num.password == password)
+const w = d.map((num)=> num.username== usr)
     // console.log(a.username)
     // const ues =  a.find((usr)=>usr.username == username && usr.password == password)
     // const ues = a.username
@@ -194,6 +215,7 @@ const w = d.map((num)=> num.username== username && num.password == password)
     // res.status(200).json("Enter the name of the user to remove it ")
     // const {del} = req.body;
     fs.unlinkSync(`${del}.txt`)
+    res.json({Msg:"your todo is deleted"})
     console.log("Now todo is deleted") 
     // console.error("this is error")
 })

@@ -53,5 +53,17 @@
   {
     "username": "user1",
     "password": "$2b$10$0U9iKo4wPDlzB1rqdLC4zOSo48VOMRrdPpdnip0D83HJ0lB0eCM9e"
+  },
+  {
+    "username": "username",
+    "password": "$2b$10$tYzG1tMB.9qqxs3sm3hEWujRt855DUM7cwuvzEgecqS6pOQ4KkEHW"
+  },
+  {
+    "username": "mrani",
+    "password": "$2b$10$7X.Ke5A03IpXRUog8qfIgOuCA5j5bmOg.Gc.Gz3nchz51nGjIf9jK"
+  },
+  {
+    "username": "user",
+    "password": "$2b$10$YjsortCPYjPGdd3aXJWcXuHSVxwihSwaQwlM86jaIu/0nl4DxAjWy"
   }
 ]
