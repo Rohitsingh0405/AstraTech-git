@@ -7,7 +7,7 @@ const tansporter = nodemailer.createTransport({
     }
 })
 
-const sendMailTo = 'rs21rohit@gmail.com';
+const sendMailTo = 'piyush.soni8877@gmail.com';
 const mailoptions = {
     from:"rs21rohit@gmail.com",
     to:sendMailTo,
