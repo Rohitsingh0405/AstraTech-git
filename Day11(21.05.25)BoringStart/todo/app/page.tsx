@@ -46,6 +46,7 @@ export default function Home() {
         }
         </div>
     <div>
+      
       {
           todos.map((todo,i)=>{
             if(todo.type == "Completed"){
