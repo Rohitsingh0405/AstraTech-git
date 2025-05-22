@@ -37,7 +37,7 @@ export default function Home() {
             if(todo.type == "Current"){
 
               return(
-                <>
+                <>''
                 <Todo todo={todo.todo} type="Current"/>
                 </>
               )
