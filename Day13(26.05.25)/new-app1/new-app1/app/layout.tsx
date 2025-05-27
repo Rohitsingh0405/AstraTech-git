@@ -24,12 +24,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-black flex justify-center items-center h-screen w-full">
-        <div className="bg-pink-500 w-1/2 flex justify-center items-center p-15 ">
-        {children}
-
+      <body className="flex items-center justify-center w-full h-screen flex flex-row">
+          <div className=" w-70 h-120 m-20 rounded-lg bg-[#151515]">
+            <div className="flex items-center justify-center w-full h-1/6 bg-[#0ab6ab] rounded-lg ">
+              <h1 className="text-white text-[20px] font-bold">
+                Todo App
+              </h1>
+            </div>
+            <div className=" h-5/6 flex mt-10 ">{children}</div>
+        
         </div>
-    
       </body>
     </html>
   );
