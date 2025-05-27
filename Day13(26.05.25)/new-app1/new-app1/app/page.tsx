@@ -3,7 +3,7 @@ import Image from "next/image";
 import TODO from "./_components/TODO";
 import { todo } from "node:test";
 import { useState } from "react";
-
+import likhnekaJagahmodel from "./_components/LikhnekaJagahmodel";
 export interface todoListType {
   id:string,
   todo:string,
@@ -35,9 +35,15 @@ const todoList:todoListType[] = [
 ]
 
 export default function Home() {
- const [todo,setTodo] = useState<todoListType[]>(todoList);
-    return <div>
-      <div>
+
+  const [todo,setTodo] = useState<todoListType[]>(todoList);
+  const[showModel,setShowModel] = useState<boolean>(true)
+const addTodo = ()=>{
+    console.log("Add new todo")
+}
+return <div>
+    <likhnekaJagahmodel/>
+      {/* <div>
         {
           todo.map((todo:todoListType)=>{
             if(todo.isComplete){
@@ -58,9 +64,11 @@ export default function Home() {
           })
         }
       </div>
-      <div className="text-center text-gray-50 absolute-bottom left-1/2 rounded-xl bg-amber-400  ">
-      Add Text 
+      <div className="text-center text-gray-50 absolute-bottom left-1/2 rounded-xl bg-amber-400 cursor-pointer " onClick={()=>{
+      setShowModel(!showModel)
+      }}>
+      
 
-      </div>
+      </div> */}
     </div>
 }
