@@ -1,5 +1,7 @@
+"use client"
 import Image from "next/image";
 import TODO from "./_components/TODO";
+import { todo } from "node:test";
 
 export interface todoListType {
   id:string,
@@ -17,12 +19,12 @@ const todoList = [
   {
     id:"2",
     todo:"See Harkirat lecture",
-    isComplete:false,
+    isComplete:true,
   },
   {
     id:"3",
     todo:"See striver dsa ",
-    isComplete:false,
+    isComplete:true,
   },
   {
     id:"4",
@@ -32,9 +34,12 @@ const todoList = [
 ]
 
 export default function Home() {
+let b ;
   return (
-    todoList.map((todo)=>
-    todo.isComplete === true ? <TODO/> : ""
-      )
-    )
+    todoList.map((todos,index)=>
+    todos.isComplete === true ? <TODO todo={ todoList[index].todo}/> : ""
+    
+)
+
+)
 }
