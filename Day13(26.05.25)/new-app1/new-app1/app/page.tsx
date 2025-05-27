@@ -2,6 +2,7 @@
 import Image from "next/image";
 import TODO from "./_components/TODO";
 import { todo } from "node:test";
+import { useState } from "react";
 
 export interface todoListType {
   id:string,
@@ -9,7 +10,7 @@ export interface todoListType {
   isComplete:boolean,
 } 
 
-const todoList = [
+const todoList:todoListType[] = [
   
   {
     id:"1",
@@ -34,12 +35,32 @@ const todoList = [
 ]
 
 export default function Home() {
-let b ;
-  return (
-    todoList.map((todos,index)=>
-    todos.isComplete === true ? <TODO todo={ todoList[index].todo}/> : ""
-    
-)
+ const [todo,setTodo] = useState<todoListType[]>(todoList);
+    return <div>
+      <div>
+        {
+          todo.map((todo:todoListType)=>{
+            if(todo.isComplete){
+              return <TODO todo={todo} setTodo={setTodo} />
+            
+              
+            }
+          })
+        }
+      </div>
+      <div>
+        {
 
-)
+          todo.map((todo:todoListType)=>{
+            if(!todo.isComplete){
+              return <div><del className="text-amber-400"><TODO todo={todo} setTodo={setTodo} /></del></div>
+            }
+          })
+        }
+      </div>
+      <div className="text-center text-gray-50 absolute-bottom left-1/2 rounded-xl bg-amber-400  ">
+      Add Text 
+
+      </div>
+    </div>
 }

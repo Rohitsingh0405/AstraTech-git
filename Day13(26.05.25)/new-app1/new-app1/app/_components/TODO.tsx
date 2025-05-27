@@ -1,19 +1,40 @@
-import React from "react";
+import React, {Dispatch,SetStateAction} from "react";
 import { todoListType } from "../page";
 
-function TODO(todo: any) {
-  const {todoss } = todo;
-  console.log(todoss)
+function TODO(
+  {
+  todo: { id, isComplete, todo },
+  setTodo,
+}: {
+  todo: todoListType;
+  setTodo:Dispatch<SetStateAction<todoListType[]>>
+}) {
+  // const {todoss} = todo;
+  // console.log(todoss)
+  const toggleButton = () => {
+    if(isComplete){
+      setTodo((prevtodo)=>
+        prevtodo.map((todo)=>
+        todo.id === id ? {...todo,isComplete:false} : todo
+        )
+      )
+    }
+    else{
+      setTodo((prevTodo)=>
+      prevTodo.map((todo)=>
+      todo.id === id ? {...todo,isComplete:true}: todo)
+    )
+    }
+  };
+
   return (
     <div className="">
       <div className=" h-10 w-60 rounded-md bg-[#201f1f] flex flex-row items-center  ml-5">
-        <div className="w-5 h-5 rounded-4xl border-2 border-white bg-tranparent ml-2 text-white">
-          <div className="-mt-1 ">&#10003;</div>
-        </div>
-
-        <div className="text-white font-thin ml-2">
-        
-          <del>{todoss}</del>
+       
+      
+        <div className="text-white font-thin ml-2 cursor-pointer" onClick={toggleButton}>
+          
+          {todo}
         </div>
       </div>
     </div>
