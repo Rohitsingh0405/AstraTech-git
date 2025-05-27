@@ -31,7 +31,7 @@ export default function RootLayout({
                 Todo App
               </h1>
             </div>
-            <div className=" h-5/6 flex mt-10 ">{children}</div>
+            <div className=" h-5/6 flex mt-10 flex-col gap-4">{children}</div>
         
         </div>
       </body>
