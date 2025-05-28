@@ -41,7 +41,7 @@ export default function Home() {
 const addTodo = ()=>{
     console.log("Add new todo")
 }
-return <div>
+return <div >
      {showModel &&<LikhnekaJagahmodel showModel={showModel} setShowModel={setShowModel}></LikhnekaJagahmodel>}
       <div>
         {
@@ -62,7 +62,7 @@ return <div>
               return <div>
                 <div className="flex flex-row ">
                   
-                <del className="">
+                <del className="text-amber-500 ">
                   <TODO todo={todo} setTodo={setTodo} />
                   </del>
                 </div>

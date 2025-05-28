@@ -5,7 +5,7 @@ export default function LikhnekaJagahmodel(props){
             {/* <div className="underline text-black">Add Todo</div> */}
             <input type="text" placeholder="Enter your todo" className="w-full text-center border-2"/>
             <div className="cursor-pointer" >add</div>
-            <div className="w-15 h-6 bg-blue-400 rounded-2xl flex justify-center " onClick={()=>{
+            <div className=" cursor-pointer w-15 h-6 bg-blue-400 rounded-2xl flex justify-center " onClick={()=>{
                 const b = props.showModel
                 props.setShowModel(!b)
             }}>close</div>
