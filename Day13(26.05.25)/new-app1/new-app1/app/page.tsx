@@ -3,7 +3,7 @@ import Image from "next/image";
 import TODO from "./_components/TODO";
 import { todo } from "node:test";
 import { useState } from "react";
-import likhnekaJagahmodel from "./_components/LikhnekaJagahmodel";
+import LikhnekaJagahmodel from "./_components/LikhnekaJagahmodel";
 export interface todoListType {
   id:string,
   todo:string,
@@ -42,8 +42,8 @@ const addTodo = ()=>{
     console.log("Add new todo")
 }
 return <div>
-    <likhnekaJagahmodel/>
-      {/* <div>
+     {showModel &&<LikhnekaJagahmodel showModel={showModel} setShowModel={setShowModel}></LikhnekaJagahmodel>}
+      <div>
         {
           todo.map((todo:todoListType)=>{
             if(todo.isComplete){
@@ -59,16 +59,24 @@ return <div>
 
           todo.map((todo:todoListType)=>{
             if(!todo.isComplete){
-              return <div><del className="text-amber-400"><TODO todo={todo} setTodo={setTodo} /></del></div>
+              return <div>
+                <div className="flex flex-row ">
+                  
+                <del className="">
+                  <TODO todo={todo} setTodo={setTodo} />
+                  </del>
+                </div>
+                </div>
             }
           })
         }
       </div>
       <div className="text-center text-gray-50 absolute-bottom left-1/2 rounded-xl bg-amber-400 cursor-pointer " onClick={()=>{
       setShowModel(!showModel)
-      }}>
       
+      }}>
+      add todo 
 
-      </div> */}
+      </div>
     </div>
 }
