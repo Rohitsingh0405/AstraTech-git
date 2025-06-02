@@ -1,3 +1,4 @@
+ 
 const express = require('express')
 const fs = require('fs')
 const bcrypt = require('bcrypt')
@@ -5,8 +6,10 @@ const jwt = require('jsonwebtoken')
 // const { json } = require('stream/consumers');
 const { json } = require('stream/consumers')
 const app = express();
+const cors = require('cors')
+const prisma = require('./prismasetup')
+app.use(cors())
 app.use(express.json())
-
 
 
 require('dotenv').config()
@@ -40,6 +43,11 @@ const createUserDatabase = (usr,data)=>{
     
 // } 
 
+app.get("/getUser",async(req,res)=>{
+    const users =await prisma.user.findMany()
+    res.send(users)
+})
+
 app.post("/Signup",async(req,res)=>{
 
 const {username,password} = req.body
@@ -52,7 +60,7 @@ const findUser = readDataParse.find((users)=>users.username == username) //Ek na
 console.log(readDataParse)
 
  if(findUser){
-    res.status(200).json({Message:"User already exits"})
+    res.status(200).json({Message:`${username} app zinda hai exits krte hai`})
     return
 }
 
@@ -71,6 +79,7 @@ app.post("/Login",async(req,res)=>{
     if(username == "Aniket" && password == "Aniket"){
          const token = jwt.sign({username},process.env.JWT_SECRET,{expiresIn:'12h'})
         console.log(token)
+        
         res.status(200).json({token})
        
     }
@@ -87,6 +96,7 @@ app.post("/Login",async(req,res)=>{
         console.log("Hash matched")
         const token = jwt.sign({username},process.env.JWT_SECRET,{expiresIn:'12h'})
         console.log(token)
+        // LocalStorage.setItem("TOKEN",JSON.stringify(token))
         res.status(200).json({token,success:hash1})
         
         return
@@ -98,7 +108,7 @@ app.post("/Login",async(req,res)=>{
     res.status(404).json({Message:"You password is incorrect "})
 })
 app.get("/Access",(req,res)=>{
-res.json("hi")
+res.json("hello")
 })
 app.post("/addTodo",(req,res)=>{
     // console.log("This is the add Todo api")
