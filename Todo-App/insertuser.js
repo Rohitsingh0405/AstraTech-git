@@ -1,11 +1,11 @@
-import prisma from "./prismasetup";
+import prisma from "./prismasetup.js";
+
 const add = async ()=>{
     const User =await prisma.User.create({
         data:{
             id:"1",
             name:"Rohit",
             email:"rs21rohit@gmail.com",
-            role:"user",
             password:"123"
 
         }
