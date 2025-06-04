@@ -53,51 +53,15 @@ app.post("/Signup",async(req,res)=>{
 
 const {username,password,email} = req.body
 const hashpass =await bcrypt.hash(password,10)
-const use = async()=>{
+const userCheck = async()=>{
+    const userexists = await prisma.User.findMany(
+    )
+    console.log(userexists)
+    res.json("User")
 
-    const userss = await prisma.User.findMany()
-    console.log(userss)
-    
-    if(userss){
-        res.json({
-            "DATA":"User already exists"
-        })
-        return
-    }
+}
 
-       const User =await prisma.User.create({
-            data:{
-                id:randomUUID(),
-                name:username,
-                email:email,
-                password:hashpass
-    
-            }
-        })
-        res.json({
-            data:"User ADDED"
-        })
-    }
-
-use()
-
-// const readData = fs.readFileSync("database.json",'utf-8')
-// const readDataParse = JSON.parse(readData)
-// const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
-// console.log(readDataParse)
-
-//  if(findUser){
-//     res.status(200).json({Message:`${username} app zinda hai exits krte hai`})
-//     return
-// }
-
-// // writeDataFuntion()
-// readDataParse.push({username,password:hashpass})
-// fs.writeFileSync('database.json',JSON.stringify(readDataParse,null,2))
-// // findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
-
-// res.json("You are now Signed Up")
-
+userCheck()
 })
 app.post("/Login",async(req,res)=>{
     const {username,password,email} = req.body;
