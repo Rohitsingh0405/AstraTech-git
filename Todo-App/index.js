@@ -1,232 +1,270 @@
-const express = require('express')
-const fs = require('fs')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const express = require("express");
+const fs = require("fs");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 // const { json } = require('stream/consumers');
-const { json } = require('stream/consumers')
+const { json } = require("stream/consumers");
+const prisma = require("./prismaSetup");
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
-
-
-require('dotenv').config()
+require("dotenv").config();
 const user = [];
 
+const date = new Date();
+const hour = date.getHours();
+const min = date.getMinutes();
 
+const ti = `${hour}:${min}`;
+const createDatabase = () => {
+  fs.writeFileSync("dataBase.json", JSON.stringify(user));
+};
+const space = "\n";
+const space1 = "\t";
+const createUserDatabase = (usr, data) => {
+  console.log({ user: usr });
+  console.log({ datas: data });
+  fs.writeFileSync(`${usr}.txt`, data + space1 + ti + space);
+  // fs.appendFileSync(`${usr}.txt `,space)
 
-const date = new Date()
-const hour = date.getHours()
-const min = date.getMinutes()
-
-const ti = `${hour}:${min}`
-const createDatabase = ()=>{
-    fs.writeFileSync("dataBase.json",JSON.stringify(user))
-}
-const space = "\n"
-const space1 = "\t"
-const createUserDatabase = (usr,data)=>{
-    console.log({user:usr})
-    console.log({datas:data})
-    fs.writeFileSync(`${usr}.txt`,data+space1+ti+space)
-    // fs.appendFileSync(`${usr}.txt `,space)
-    
-    // fs.appendFileSync(`${usr}.txt`,ti)
-    
-}
+  // fs.appendFileSync(`${usr}.txt`,ti)
+};
 // const tokenVerify = (req,res)=>{
 
 //     return verified
 
-    
-// } 
+// }
 
-app.post("/Signup",async(req,res)=>{
-
-const {username,password} = req.body
-console.log("Eror kya hai")
-const hashpass =await bcrypt.hash(password,10)
-user.push({username,password:hashpass})
-const readData = fs.readFileSync("database.json",'utf-8')
-const readDataParse = JSON.parse(readData)
-const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
-console.log(readDataParse)
-
- if(findUser){
-    res.status(200).json({Message:"User already exits"})
-    return
-}
-
-// writeDataFuntion()
-readDataParse.push({username,password:hashpass})
-fs.writeFileSync('database.json',JSON.stringify(readDataParse,null,2))
-// findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
-
-res.json("You are now Signed Up")
-
-})
-app.post("/Login",async(req,res)=>{
-    const {username,password} = req.body;
-    
-    //  readDataFunction()
-    if(username == "Aniket" && password == "Aniket"){
-         const token = jwt.sign({username},process.env.JWT_SECRET,{expiresIn:'12h'})
-        console.log(token)
-        res.status(200).json({token})
-       
-    }
-    const readData = fs.readFileSync("database.json",'utf-8')
-    const readDataParse = JSON.parse(readData)
-    const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
-    console.log(readDataParse)
-
- if(findUser){
-    // res.status(200).json({Message:"User already exits"})
-    
-    const hash1 = await bcrypt.compare(password,findUser.password)
-    if(hash1){
-        console.log("Hash matched")
-        const token = jwt.sign({username},process.env.JWT_SECRET,{expiresIn:'12h'})
-        console.log(token)
-        res.status(200).json({token,success:hash1})
-        
-        return
+// Authentication Middleware
+const authenticateToken = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ Message: "No token provided" });
     }
 
-}
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Add user info to request object
+    next();
+  } catch (error) {
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ Message: "Invalid token" });
+    }
+    res.status(500).json({ Message: "Authentication error" });
+  }
+};
 
-    
-    res.status(404).json({Message:"You password is incorrect "})
-})
-app.get("/Access",(req,res)=>{
-res.json("hi")
-})
-app.post("/addTodo",(req,res)=>{
-    // console.log("This is the add Todo api")
-    const token1 = req.headers.authorization
-    // console.log(token1)
-    const token11 = token1.split(" ")
-    // console.log(token11)
-   const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
-    console.log(usr.username)
-
-    // console.log(req.userData)
-   if(!usr.username){
-    console.log("You are not sending token")
-    res.status(404).json({Message:"You are not sending the token"})
-    return
-   }
-   if(!fs.existsSync(`${usr.username}.txt`)){
-    console.log("user does not exists")
-    const {data} = req.body
-    createUserDatabase(usr.username,data)
-    // fs.writeFileSync(`${usr}.txt`,data)
-    res.status(200).json({Todo:"Your Todo is Added"})
-    return
-}
-if(fs.existsSync(`${usr.username}.txt`)){
-    const {data} = req.body
-    fs.appendFileSync(`${usr.username}.txt`,data + space + ti)
-    // fs.appendFileSync(`${usr.username}.txt`,ti)
-    res.status(200).json({Todo:"Your Todo is Added"})
-    return
-}
-})
-app.get("/seeTodo",(req,res)=>{
-    // const usr = tokenVerify()
-    const token1 = req.headers.authorization
-    // console.log(token1)
-    const token11 = token1.split(" ")
-    // console.log(token11)
-    const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
-    // console.log(usr.username)
-
-    // console.log(req.userData)
-    if(usr.username == "Aniket"){
-        const data = fs.readFileSync("database.json",'utf-8')
-        const data1 = JSON.parse(data) 
-        res.json(data1)
-
-        return
+app.get("/getuser", authenticateToken, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== "ADMIN") {
+      return res
+        .status(403)
+        .json({ Message: "Unauthorized: Admin access required" });
     }
 
-   if(!usr.username){
-    console.log("You are not sending token")
-    res.status(404).json({Message:"You are not sending the token"})
-    return
-   }
-    console.log(usr)
-   fs.readFile(`${usr.username}.txt`,'utf-8',(err,data)=>{
-    res.status(200).json({Your_todos:data})
-   })
-})
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Get users error:", error);
+    res.status(500).json({ Message: "Error fetching users" });
+  }
+});
 
-app.post("/deleteTodo",(req,res)=>{
-    // const usr = tokenVerify()
-    const token1 = req.headers.authorization
-    // console.log(token1)
-    const token11 = token1.split(" ")
-    // console.log(token11)
-    const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
-    // console.log(usr.username)
+app.post("/Signup", async (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+    const hashpass = await bcrypt.hash(password, 10);
 
-    // console.log(req.userData)
-   if(!usr.username){
-    console.log("You are not sending token")
-    res.status(404).json({Message:"You are not sending the token"})
-    return
-   }
-  const {data} = req.body;
-  const readData = fs.readFileSync(`${usr.username}.txt`,'utf-8')
-  const newData = readData.replace(data,'') 
-  fs.writeFileSync(`${usr.username}.txt`,newData);
-  res.status(200).json("You Todo is deleted")
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email },
+    });
 
-
-})
-app.post("/admin",(req,res)=>{
-    const{del} = req.body
-//     const a = fs.readFileSync("admin.json",'utf-8')
-//    const b =  a.find((usr)=>usr.username == username)
-    const token1 = req.headers.authorization
-    // console.log(token1)
-    const token11 = token1.split(" ")
-    // console.log(token11)
-   const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
-    console.log(usr.username)
-
-
-   
-const b  = fs.readFileSync("admin.json",'utf-8')
-const d = JSON.parse(b)
-    console.log(b)
-    // this will be used to maintain the json doc
-const w = d.map((num)=> num.username== usr)
-    // console.log(a.username)
-    // const ues =  a.find((usr)=>usr.username == username && usr.password == password)
-    // const ues = a.username
-    // console.log(username)
-    // console.log(ues)
-    if(!w){
-        res.status(404).json({Message:"You id password for admin does not match "})
-        return
+    if (existingUser) {
+      return res.status(400).json({ Message: "User already exists" });
     }
-    // const rd = fs.readFileSync("database.json",'utf-8')
-   // res.status(200).json({Message:rd})
-    // res.status(200).json("Enter the name of the user to remove it ")
-    // const {del} = req.body;
-    fs.unlinkSync(`${del}.txt`)
-    res.json({Msg:"your todo is deleted"})
-    console.log("Now todo is deleted") 
-    // console.error("this is error")
-})
 
-app.listen(8080,()=>{
-    if(!fs.existsSync("dataBase.json")){
-        createDatabase();
+    // Create new user
+    const newUser = await prisma.user.create({
+      data: {
+        id: Math.random().toString(36).substring(7), // Generate a random ID
+        name: username,
+        email,
+        password: hashpass,
+      },
+    });
+
+    res.status(201).json({
+      Message: "You are now Signed Up",
+      user: { id: newUser.id, name: newUser.name, email: newUser.email },
+    });
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ Message: "Error during signup" });
+  }
+});
+app.post("/Login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(404).json({ Message: "User not found" });
     }
-    console.log("Server started")
-    console.log("When the server started .")
-})
 
-// Just for the commit 
+    // Compare password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ Message: "Invalid password" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "12h" }
+    );
+
+    res.status(200).json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ Message: "Error during login" });
+  }
+});
+app.get("/Access", authenticateToken, (req, res) => {
+  res.json("hi");
+});
+app.post("/addTodo", authenticateToken, async (req, res) => {
+  try {
+    const { title } = req.body;
+
+    const todo = await prisma.todo.create({
+      data: {
+        id: Math.random().toString(36).substring(7),
+        title,
+        userId: req.user.userId,
+      },
+    });
+
+    res.status(201).json({ Message: "Todo added successfully", todo });
+  } catch (error) {
+    console.error("Add todo error:", error);
+    res.status(500).json({ Message: "Error adding todo" });
+  }
+});
+app.get("/seeTodo", authenticateToken, async (req, res) => {
+  try {
+    const todos = await prisma.todo.findMany({
+      where: {
+        userId: req.user.userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.status(200).json({ todos });
+  } catch (error) {
+    console.error("Get todos error:", error);
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ Message: "Invalid token" });
+    }
+    res.status(500).json({ Message: "Error fetching todos" });
+  }
+});
+
+app.post("/deleteTodo", authenticateToken, async (req, res) => {
+  try {
+    const { todoId } = req.body;
+
+    // Verify that the todo belongs to the user
+    const todo = await prisma.todo.findFirst({
+      where: {
+        id: todoId,
+        userId: req.user.userId,
+      },
+    });
+
+    if (!todo) {
+      return res
+        .status(404)
+        .json({ Message: "Todo not found or unauthorized" });
+    }
+
+    await prisma.todo.delete({
+      where: {
+        id: todoId,
+      },
+    });
+
+    res.status(200).json({ Message: "Todo deleted successfully" });
+  } catch (error) {
+    console.error("Delete todo error:", error);
+    res.status(500).json({ Message: "Error deleting todo" });
+  }
+});
+app.post("/admin", authenticateToken, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== "ADMIN") {
+      return res
+        .status(403)
+        .json({ Message: "Unauthorized: Admin access required" });
+    }
+
+    const { userId } = req.body;
+
+    // Delete all todos for the specified user
+    await prisma.todo.deleteMany({
+      where: {
+        userId: userId,
+      },
+    });
+
+    // Delete the user
+    await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    res
+      .status(200)
+      .json({ Message: "User and their todos deleted successfully" });
+  } catch (error) {
+    console.error("Admin operation error:", error);
+    res.status(500).json({ Message: "Error performing admin operation" });
+  }
+});
+
+app.listen(8080, () => {
+  if (!fs.existsSync("dataBase.json")) {
+    createDatabase();
+  }
+  console.log("Server started on port 8080 - http://localhost:8080");
+});
+
+// Just for the commit
 // console.log("Error log")

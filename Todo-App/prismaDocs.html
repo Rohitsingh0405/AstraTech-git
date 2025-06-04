@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prisma Functions Documentation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        animation: fadeInDown 1s ease-out;
+      }
+
+      .header h1 {
+        font-size: 3.5rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.3rem;
+        opacity: 0.9;
+      }
+
+      .prisma-logo {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+
+      .functions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .function-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        border-left: 6px solid;
+        transition: all 0.3s ease;
+        animation: slideInUp 0.8s ease-out;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .function-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.05)
+        );
+        border-radius: 0 0 0 100px;
+      }
+
+      .function-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      }
+
+      .function-card.create {
+        border-left-color: #4caf50;
+      }
+      .function-card.find {
+        border-left-color: #2196f3;
+      }
+      .function-card.delete {
+        border-left-color: #f44336;
+      }
+      .function-card.update {
+        border-left-color: #ff9800;
+      }
+
+      .function-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .function-name {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #2c3e50;
+        font-family: "Courier New", monospace;
+      }
+
+      .function-type {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .type-create {
+        background: #4caf50;
+        color: white;
+      }
+      .type-find {
+        background: #2196f3;
+        color: white;
+      }
+      .type-delete {
+        background: #f44336;
+        color: white;
+      }
+      .type-update {
+        background: #ff9800;
+        color: white;
+      }
+
+      .description {
+        margin: 1.5rem 0;
+        color: #666;
+        font-size: 1.2rem;
+        line-height: 1.8;
+      }
+
+      .code-section {
+        margin: 2rem 0;
+      }
+
+      .code-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 2rem;
+        border-radius: 12px;
+        font-family: "Courier New", monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        overflow-x: auto;
+        position: relative;
+        border: 1px solid #333;
+      }
+
+      .code-block::before {
+        content: "JavaScript";
+        position: absolute;
+        top: 0.8rem;
+        right: 1.5rem;
+        background: #007acc;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      .syntax-keyword {
+        color: #569cd6;
+      }
+      .syntax-string {
+        color: #ce9178;
+      }
+      .syntax-method {
+        color: #dcdcaa;
+      }
+      .syntax-property {
+        color: #9cdcfe;
+      }
+      .syntax-comment {
+        color: #6a9955;
+        font-style: italic;
+      }
+
+      .parameters-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 1.5rem 0;
+        border-left: 4px solid #17a2b8;
+      }
+
+      .parameter-item {
+        margin: 0.8rem 0;
+        padding: 0.5rem;
+        background: white;
+        border-radius: 6px;
+        border-left: 3px solid #17a2b8;
+      }
+
+      .param-name {
+        font-weight: bold;
+        color: #495057;
+        font-family: "Courier New", monospace;
+      }
+
+      .param-type {
+        color: #6c757d;
+        font-style: italic;
+      }
+
+      .usage-examples {
+        background: linear-gradient(45deg, #e3f2fd, #f3e5f5);
+        padding: 2rem;
+        border-radius: 15px;
+        margin: 2rem 0;
+      }
+
+      .example-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .model-info {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: 2px solid #6c63ff;
+      }
+
+      .model-title {
+        color: #6c63ff;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .model-fields {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .field-item {
+        background: linear-gradient(45deg, #6c63ff, #5a52d5);
+        color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .field-name {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .field-type {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .highlight {
+        background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+
+      .icon {
+        font-size: 1.2rem;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .functions-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .header h1 {
+          font-size: 2.5rem;
+        }
+
+        .function-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="prisma-logo">🔷</div>
+        <h1>Prisma Functions Guide</h1>
+        <p>Complete reference for Prisma ORM methods used in your Todo API</p>
+      </div>
+
+      <div class="model-info">
+        <h2 class="model-title">
+          <span class="icon">📊</span>
+          Database Models
+        </h2>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+          "
+        >
+          <div>
+            <h3 style="color: #2c3e50; margin-bottom: 1rem">👤 User Model</h3>
+            <div class="model-fields">
+              <div class="field-item">
+                <div class="field-name">id</div>
+                <div class="field-type">String (Primary Key)</div>
+              </div>
+              <div class="field-item">
+                <div class="field-name">name</div>
+                <div class="field-type">String</div>
+              </div>
+              <div class="field-item">
+                <div class="field-name">email</div>
+                <div class="field-type">String (Unique)</div>
+              </div>
+              <div class="field-item">
+                <div class="field-name">password</div>
+                <div class="field-type">String</div>
+              </div>
+              <div class="field-item">
+                <div class="field-name">role</div>
+                <div class="field-type">Enum (USER/ADMIN)</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="color: #2c3e50; margin-bottom: 1rem">📝 Todo Model</h3>
+            <div class="model-fields">
+              <div class="field-item">
+                <div class="field-name">id</div>
+                <div class="field-type">String (Primary Key)</div>
+              </div>
+              <div class="field-item">
+                <div class="field-name">title</div>
+                <div class="field-type">String</div>
+              </div>
+              <div class="field-item">
+                <div class="field-name">userId</div>
+                <div class="field-type">String (Foreign Key)</div>
+              </div>
+              <div class="field-item">
+                <div class="field-name">createdAt</div>
+                <div class="field-type">DateTime</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="functions-grid">
+        <!-- CREATE OPERATIONS -->
+        <div class="function-card create">
+          <div class="function-header">
+            <span class="function-name">prisma.user.create()</span>
+            <span class="function-type type-create">CREATE</span>
+          </div>
+          <p class="description">
+            Creates a new user record in the database. Used during user
+            registration with hashed password.
+          </p>
+
+          <div class="parameters-section">
+            <h4 style="color: #2c3e50; margin-bottom: 1rem">📋 Parameters</h4>
+            <div class="parameter-item">
+              <span class="param-name">data</span>
+              <span class="param-type">(object)</span> - The user data to create
+            </div>
+          </div>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-keyword">const</span>
+              <span class="syntax-property">newUser</span> =
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >user</span
+              >.<span class="syntax-method">create</span>({
+              <span class="syntax-property">data</span>: {
+              <span class="syntax-property">id</span>:
+              <span class="syntax-method">Math</span>.<span
+                class="syntax-method"
+                >random</span
+              >().<span class="syntax-method">toString</span>(<span
+                class="syntax-string"
+                >36</span
+              >).<span class="syntax-method">substring</span>(<span
+                class="syntax-string"
+                >7</span
+              >), <span class="syntax-property">name</span>:
+              <span class="syntax-property">username</span>,
+              <span class="syntax-property">email</span>,
+              <span class="syntax-property">password</span>:
+              <span class="syntax-property">hashpass</span>, }, });
+            </div>
+          </div>
+
+          <div class="usage-examples">
+            <div class="example-title">
+              <span class="icon">🎯</span>
+              What it does
+            </div>
+            <ul style="margin-left: 1.5rem; color: #495057">
+              <li>Generates a random 7-character ID</li>
+              <li>Stores username, email, and hashed password</li>
+              <li>Returns the created user object</li>
+              <li>Automatically sets createdAt and updatedAt timestamps</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="function-card create">
+          <div class="function-header">
+            <span class="function-name">prisma.todo.create()</span>
+            <span class="function-type type-create">CREATE</span>
+          </div>
+          <p class="description">
+            Creates a new todo item linked to the authenticated user. Associates
+            the todo with the user ID from JWT token.
+          </p>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-keyword">const</span>
+              <span class="syntax-property">todo</span> =
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >todo</span
+              >.<span class="syntax-method">create</span>({
+              <span class="syntax-property">data</span>: {
+              <span class="syntax-property">id</span>:
+              <span class="syntax-method">Math</span>.<span
+                class="syntax-method"
+                >random</span
+              >().<span class="syntax-method">toString</span>(<span
+                class="syntax-string"
+                >36</span
+              >).<span class="syntax-method">substring</span>(<span
+                class="syntax-string"
+                >7</span
+              >), <span class="syntax-property">title</span>,
+              <span class="syntax-property">userId</span>:
+              <span class="syntax-property">req</span>.<span
+                class="syntax-property"
+                >user</span
+              >.<span class="syntax-property">userId</span>, }, });
+            </div>
+          </div>
+        </div>
+
+        <!-- FIND OPERATIONS -->
+        <div class="function-card find">
+          <div class="function-header">
+            <span class="function-name">prisma.user.findUnique()</span>
+            <span class="function-type type-find">FIND</span>
+          </div>
+          <p class="description">
+            Finds a single user by unique field (email). Returns null if no user
+            found. Used for login validation and duplicate checking.
+          </p>
+
+          <div class="parameters-section">
+            <h4 style="color: #2c3e50; margin-bottom: 1rem">📋 Parameters</h4>
+            <div class="parameter-item">
+              <span class="param-name">where</span>
+              <span class="param-type">(object)</span> - Unique field to search
+              by
+            </div>
+          </div>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-comment"
+                >// Check for existing user during signup</span
+              >
+              <span class="syntax-keyword">const</span>
+              <span class="syntax-property">existingUser</span> =
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >user</span
+              >.<span class="syntax-method">findUnique</span>({
+              <span class="syntax-property">where</span>: {
+              <span class="syntax-property">email</span>:
+              <span class="syntax-property">email</span> }, });
+
+              <span class="syntax-comment">// Find user during login</span>
+              <span class="syntax-keyword">const</span>
+              <span class="syntax-property">user</span> =
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >user</span
+              >.<span class="syntax-method">findUnique</span>({
+              <span class="syntax-property">where</span>: {
+              <span class="syntax-property">email</span> }, });
+            </div>
+          </div>
+
+          <div class="usage-examples">
+            <div class="example-title">
+              <span class="icon">🎯</span>
+              Use Cases
+            </div>
+            <ul style="margin-left: 1.5rem; color: #495057">
+              <li><strong>Signup:</strong> Check if email already exists</li>
+              <li>
+                <strong>Login:</strong> Find user by email for authentication
+              </li>
+              <li><strong>Returns:</strong> User object or null</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="function-card find">
+          <div class="function-header">
+            <span class="function-name">prisma.user.findMany()</span>
+            <span class="function-type type-find">FIND</span>
+          </div>
+          <p class="description">
+            Retrieves multiple user records. Used by admin to get all users with
+            selected fields only.
+          </p>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-keyword">const</span>
+              <span class="syntax-property">users</span> =
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >user</span
+              >.<span class="syntax-method">findMany</span>({
+              <span class="syntax-property">select</span>: {
+              <span class="syntax-property">id</span>:
+              <span class="syntax-keyword">true</span>,
+              <span class="syntax-property">name</span>:
+              <span class="syntax-keyword">true</span>,
+              <span class="syntax-property">email</span>:
+              <span class="syntax-keyword">true</span>,
+              <span class="syntax-property">role</span>:
+              <span class="syntax-keyword">true</span>,
+              <span class="syntax-property">createdAt</span>:
+              <span class="syntax-keyword">true</span>,
+              <span class="syntax-property">updatedAt</span>:
+              <span class="syntax-keyword">true</span>, }, });
+            </div>
+          </div>
+
+          <div class="usage-examples">
+            <div class="example-title">
+              <span class="icon">🔒</span>
+              Security Note
+            </div>
+            <p style="color: #495057">
+              Uses <span class="highlight">select</span> to exclude sensitive
+              data like passwords from the response. Only admin users can access
+              this endpoint.
+            </p>
+          </div>
+        </div>
+
+        <div class="function-card find">
+          <div class="function-header">
+            <span class="function-name">prisma.todo.findMany()</span>
+            <span class="function-type type-find">FIND</span>
+          </div>
+          <p class="description">
+            Fetches all todos for a specific user with filtering and sorting.
+            Ensures users only see their own todos.
+          </p>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-keyword">const</span>
+              <span class="syntax-property">todos</span> =
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >todo</span
+              >.<span class="syntax-method">findMany</span>({
+              <span class="syntax-property">where</span>: {
+              <span class="syntax-property">userId</span>:
+              <span class="syntax-property">req</span>.<span
+                class="syntax-property"
+                >user</span
+              >.<span class="syntax-property">userId</span>, },
+              <span class="syntax-property">orderBy</span>: {
+              <span class="syntax-property">createdAt</span>:
+              <span class="syntax-string">"desc"</span>, }, });
+            </div>
+          </div>
+
+          <div class="parameters-section">
+            <h4 style="color: #2c3e50; margin-bottom: 1rem">📋 Key Features</h4>
+            <div class="parameter-item">
+              <span class="param-name">where</span> - Filters todos by userId
+              for security
+            </div>
+            <div class="parameter-item">
+              <span class="param-name">orderBy</span> - Sorts by creation date
+              (newest first)
+            </div>
+          </div>
+        </div>
+
+        <div class="function-card find">
+          <div class="function-header">
+            <span class="function-name">prisma.todo.findFirst()</span>
+            <span class="function-type type-find">FIND</span>
+          </div>
+          <p class="description">
+            Finds the first todo matching criteria. Used to verify todo
+            ownership before deletion.
+          </p>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-comment"
+                >// Verify todo belongs to user before deletion</span
+              >
+              <span class="syntax-keyword">const</span>
+              <span class="syntax-property">todo</span> =
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >todo</span
+              >.<span class="syntax-method">findFirst</span>({
+              <span class="syntax-property">where</span>: {
+              <span class="syntax-property">id</span>:
+              <span class="syntax-property">todoId</span>,
+              <span class="syntax-property">userId</span>:
+              <span class="syntax-property">req</span>.<span
+                class="syntax-property"
+                >user</span
+              >.<span class="syntax-property">userId</span>, }, });
+            </div>
+          </div>
+
+          <div class="usage-examples">
+            <div class="example-title">
+              <span class="icon">🛡️</span>
+              Security Purpose
+            </div>
+            <p style="color: #495057">
+              Ensures users can only delete their own todos by checking both
+              todo ID and user ID match.
+            </p>
+          </div>
+        </div>
+
+        <!-- DELETE OPERATIONS -->
+        <div class="function-card delete">
+          <div class="function-header">
+            <span class="function-name">prisma.todo.delete()</span>
+            <span class="function-type type-delete">DELETE</span>
+          </div>
+          <p class="description">
+            Deletes a single todo by ID. Only called after ownership
+            verification.
+          </p>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >todo</span
+              >.<span class="syntax-method">delete</span>({
+              <span class="syntax-property">where</span>: {
+              <span class="syntax-property">id</span>:
+              <span class="syntax-property">todoId</span>, }, });
+            </div>
+          </div>
+
+          <div class="usage-examples">
+            <div class="example-title">
+              <span class="icon">⚠️</span>
+              Important Notes
+            </div>
+            <ul style="margin-left: 1.5rem; color: #495057">
+              <li>Only executed after <code>findFirst()</code> verification</li>
+              <li>Permanently removes the todo from database</li>
+              <li>Returns the deleted todo object</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="function-card delete">
+          <div class="function-header">
+            <span class="function-name">prisma.todo.deleteMany()</span>
+            <span class="function-type type-delete">DELETE</span>
+          </div>
+          <p class="description">
+            Deletes multiple todos at once. Used by admin to remove all todos
+            for a specific user.
+          </p>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-comment"
+                >// Delete all todos for a user (admin operation)</span
+              >
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >todo</span
+              >.<span class="syntax-method">deleteMany</span>({
+              <span class="syntax-property">where</span>: {
+              <span class="syntax-property">userId</span>:
+              <span class="syntax-property">userId</span>, }, });
+            </div>
+          </div>
+
+          <div class="usage-examples">
+            <div class="example-title">
+              <span class="icon">🔐</span>
+              Admin Only
+            </div>
+            <p style="color: #495057">
+              This cascading delete ensures no orphaned todos remain when a user
+              is deleted by an admin.
+            </p>
+          </div>
+        </div>
+
+        <div class="function-card delete">
+          <div class="function-header">
+            <span class="function-name">prisma.user.delete()</span>
+            <span class="function-type type-delete">DELETE</span>
+          </div>
+          <p class="description">
+            Removes a user account completely. Admin-only operation that follows
+            todo cleanup.
+          </p>
+
+          <div class="code-section">
+            <div class="code-title">
+              <span class="icon">💻</span>
+              Code from your API
+            </div>
+            <div class="code-block">
+              <span class="syntax-comment"
+                >// Delete user after todos are removed</span
+              >
+              <span class="syntax-keyword">await</span>
+              <span class="syntax-property">prisma</span>.<span
+                class="syntax-method"
+                >user</span
+              >.<span class="syntax-method">delete</span>({
+              <span class="syntax-property">where</span>: {
+              <span class="syntax-property">id</span>:
+              <span class="syntax-property">userId</span>, }, });
+            </div>
+          </div>
+
+          <div class="usage-examples">
+            <div class="example-title">
+              <span class="icon">📋</span>
+              Deletion Flow
+            </div>
+            <ol style="margin-left: 1.5rem; color: #495057">
+              <li>Admin authentication check</li>
+              <li>Delete all user's todos with <code>deleteMany()</code></li>
+              <li>Delete user with <code>delete()</code></li>
+              <li>Return success message</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 15px;
+          padding: 2rem;
+          margin: 3rem 0;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          text-align: center;
+        "
+      >
+        <h2 style="color: #2c3e50; margin-bottom: 1rem">🎉 Summary</h2>
+        <p style="font-size: 1.1rem; color: #666; line-height: 1.8">
+          Your API uses
+          <span class="highlight">8 different Prisma methods</span> across
+          <span class="highlight">2 models</span> to handle complete CRUD
+          operations with proper authentication and authorization. Each method
+          is strategically chosen for specific use cases - from
+          <code>findUnique()</code> for login validation to
+          <code>deleteMany()</code> for casc
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
