@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -19,7 +18,6 @@ model User {
   updatedAt DateTime @updatedAt
   Todo      Todo[]
 }
-
 
 model Todo {
   id        String   @id

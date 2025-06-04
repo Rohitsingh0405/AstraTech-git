@@ -53,33 +53,33 @@ app.post("/Signup",async(req,res)=>{
 
 const {username,password,email} = req.body
 const hashpass =await bcrypt.hash(password,10)
-user.push({username,password:hashpass})
-const userss = prisma.User.findMany({
-    where:{name:username}
+const use = async()=>{
 
-})
-console.log(userss)
-if(userss){
-    res.json({
-        "DATA":"User already exists"
-    })
-    return
-}
-const add = async ()=>{
-    const User =await prisma.User.create({
-        data:{
-            id:randomUUID(),
-            name:username,
-            email:email,
-            password:hashpass
+    const userss = await prisma.User.findMany()
+    console.log(userss)
+    
+    if(userss){
+        res.json({
+            "DATA":"User already exists"
+        })
+        return
+    }
 
-        }
-    })
-}
-add()
-res.json({
-    data:"User ADDED"
-})
+       const User =await prisma.User.create({
+            data:{
+                id:randomUUID(),
+                name:username,
+                email:email,
+                password:hashpass
+    
+            }
+        })
+        res.json({
+            data:"User ADDED"
+        })
+    }
+
+use()
 
 // const readData = fs.readFileSync("database.json",'utf-8')
 // const readDataParse = JSON.parse(readData)
@@ -100,7 +100,7 @@ res.json({
 
 })
 app.post("/Login",async(req,res)=>{
-    const {username,password} = req.body;
+    const {username,password,email} = req.body;
     
     //  readDataFunction()
     if(username == "Aniket" && password == "Aniket"){
@@ -110,15 +110,32 @@ app.post("/Login",async(req,res)=>{
         res.status(200).json({token})
        
     }
-    const readData = fs.readFileSync("database.json",'utf-8')
-    const readDataParse = JSON.parse(readData)
-    const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
-    console.log(readDataParse)
-
- if(findUser){
-    // res.status(200).json({Message:"User already exits"})
+    // const readData = fs.readFileSync("database.json",'utf-8')
+    // const readDataParse = JSON.parse(readData)
+    // const findUser = readDataParse.find((users)=>users.username == username) //Ek naam ka ek he user hoga 
+    // console.log(readDataParse)
     
-    const hash1 = await bcrypt.compare(password,findUser.password)
+    // const hash1 = await bcrypt.compare(password,findUser.password)
+    
+    const readData = async ()=>{
+        
+        const user = await prisma.User.findUnique({
+            where:{email:email},
+            select:{
+              password:true,
+            }
+        })
+        console.log(user)
+    }
+    readData()
+    // console.log(readData.password)
+ if(readData){
+    // res.status(200).json({Message:"User already exits"})
+    const a = prisma.User.findMany({
+        where:{name:username} 
+    })
+   console.log(a)
+    // const hash1 = await bcrypt.compare(password,findUser.password)
     if(hash1){
         console.log("Hash matched")
         const token = jwt.sign({username},process.env.JWT_SECRET,{expiresIn:'12h'})
@@ -144,29 +161,29 @@ app.post("/addTodo",(req,res)=>{
     const token11 = token1.split(" ")
     // console.log(token11)
    const usr = jwt.verify(token11[1],process.env.JWT_SECRET)
-    console.log(usr.username)
+    // console.log(usr.username)
 
     // console.log(req.userData)
-   if(!usr.username){
-    console.log("You are not sending token")
-    res.status(404).json({Message:"You are not sending the token"})
-    return
-   }
-   if(!fs.existsSync(`${usr.username}.txt`)){
-    console.log("user does not exists")
-    const {data} = req.body
-    createUserDatabase(usr.username,data)
-    // fs.writeFileSync(`${usr}.txt`,data)
-    res.status(200).json({Todo:"Your Todo is Added"})
-    return
-}
-if(fs.existsSync(`${usr.username}.txt`)){
-    const {data} = req.body
-    fs.appendFileSync(`${usr.username}.txt`,data + space + ti)
-    // fs.appendFileSync(`${usr.username}.txt`,ti)
-    res.status(200).json({Todo:"Your Todo is Added"})
-    return
-}
+//    if(!usr.username){
+//     console.log("You are not sending token")
+//     res.status(404).json({Message:"You are not sending the token"})
+//     return
+//    }
+//    if(!fs.existsSync(`${usr.username}.txt`)){
+//     console.log("user does not exists")
+//     const {data} = req.body
+//     createUserDatabase(usr.username,data)
+//     // fs.writeFileSync(`${usr}.txt`,data)
+//     res.status(200).json({Todo:"Your Todo is Added"})
+//     return
+// }
+// if(fs.existsSync(`${usr.username}.txt`)){
+//     const {data} = req.body
+//     fs.appendFileSync(`${usr.username}.txt`,data + space + ti)
+//     // fs.appendFileSync(`${usr.username}.txt`,ti)
+//     res.status(200).json({Todo:"Your Todo is Added"})
+//     return
+// }
 })
 app.get("/seeTodo",(req,res)=>{
     // const usr = tokenVerify()
@@ -258,9 +275,7 @@ const w = d.map((num)=> num.username== usr)
 })
 
 app.listen(8080,()=>{
-    if(!fs.existsSync("dataBase.json")){
-        createDatabase();
-    }
+    
     console.log("Server started")
     console.log("When the server started .")
 })
