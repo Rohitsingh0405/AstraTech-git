@@ -145,6 +145,7 @@ app.post("/addTodo",(req,res)=>{
 //     const {data} = req.body
 //     fs.appendFileSync(`${usr.username}.txt`,data + space + ti)
 //     // fs.appendFileSync(`${usr.username}.txt`,ti)
+
 //     res.status(200).json({Todo:"Your Todo is Added"})
 //     return
 // }
